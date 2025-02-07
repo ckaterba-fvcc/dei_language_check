@@ -9,12 +9,12 @@ ProcessPDF <- function(FilePath){
   for(page in doc){
     #remove all new lines
     lines <- str_split(page, '\n')[[1]][str_split(page, '\n')[[1]] != ""] %>%
-      #strip all numbers and whitespace then capitalize
+      #strip all numbers, punctuation, and whitespace then capitalize
       str_remove_all(pattern = '[:digit:]|[:punct:]') %>%
       str_trim() %>%
       toupper() %>%
       str_c(collapse = ' ')
-    # collapse into a single string
+    # collapse into a single string with spaces between lines
     docText <- append(docText, lines)
   }
   docText <- str_c(docText, collapse = ' ')
@@ -36,6 +36,8 @@ HowWoke <- function(FilePath){
 Mission <- HowWoke('./docs/fvcc_mission.pdf')
 
 view(Mission)
+
+
 
 
 
