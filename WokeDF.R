@@ -1,0 +1,21 @@
+library(readtext)
+
+WokeWords <- list.files(pattern = 'txt$', recursive = TRUE)
+
+WokeDF <- tibble( Category = character()
+                  , Terms = character())
+for(file in WokeWords){
+  tmp <- tibble(
+    Terms = str_split(readtext(file)$text, pattern = '; |;\n') [[1]] %>%
+      str_replace('\n', ' ') %>%
+      str_replace('[:punct:]', '') %>% 
+      # add spaces to beginning and end to avoid partial matches
+      # on things like ALLY 
+      str_replace('^', ' ') %>% 
+      str_replace('$', ' ') 
+  )%>%
+    mutate(Category = str_remove_all(file, pattern = 'keywords/|\\.txt'), .before = Terms)
+  WokeDF <- WokeDF %>%
+    bind_rows(tmp)
+}
+save(WokeDF, file = './data/WokeWords.Rda')
